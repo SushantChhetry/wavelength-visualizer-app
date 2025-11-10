@@ -222,11 +222,6 @@ Source → Build (Vite) → Static Files → Vercel CDN
 Source → Docker Build → Container → Railway Platform
 ```
 
-### CI/CD (GitHub Actions)
-```
-Push → Test → Build → Deploy
-```
-
 ## Browser Compatibility
 
 **Minimum Requirements:**
