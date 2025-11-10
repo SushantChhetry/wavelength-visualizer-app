@@ -1,0 +1,41 @@
+{
+  "name": "wavelength-visualizer-app",
+  "version": "1.0.0",
+  "description": "Real-time audio visualization with WebAudio, Three.js, curl noise, and SDE flow",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "echo 'Linting not configured yet'",
+    "format": "echo 'Formatting not configured yet'"
+  },
+  "keywords": [
+    "audio",
+    "visualization",
+    "webgl",
+    "three.js",
+    "webaudio",
+    "curl-noise",
+    "sde",
+    "wavelet",
+    "cqt"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "@types/three": "^0.181.0",
+    "happy-dom": "^20.0.10",
+    "jsdom": "^27.1.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.2",
+    "vitest": "^4.0.8"
+  },
+  "dependencies": {
+    "three": "^0.181.0"
+  }
+}

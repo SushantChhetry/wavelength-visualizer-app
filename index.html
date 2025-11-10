@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wavelength Visualizer</title>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="canvas"></canvas>
+      <div id="ui-container">
+        <div id="controls">
+          <h2>Wavelength Visualizer</h2>
+          <div class="control-group">
+            <label for="audio-file">Upload Audio:</label>
+            <input type="file" id="audio-file" accept="audio/*" />
+          </div>
+          <div class="control-group">
+            <button id="play-pause">Play</button>
+            <button id="reset">Reset</button>
+          </div>
+          <div class="control-group">
+            <label for="flow-intensity">Flow Intensity:</label>
+            <input type="range" id="flow-intensity" min="0" max="1" step="0.01" value="0.5" />
+            <span id="flow-intensity-value">0.5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
