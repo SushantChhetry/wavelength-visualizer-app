@@ -1,0 +1,24 @@
+# Development Dockerfile for Wavelength Visualizer App
+# This supports hot-reloading with volume mounting
+
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies (including devDependencies for development)
+RUN npm ci && npm cache clean --force
+
+# Expose port (default 3000, can be overridden via PORT env var)
+EXPOSE 3000
+
+# Set environment variable for port
+ENV PORT=3000
+
+# Start the development server with hot-reloading
+# Vite's dev server supports HMR (Hot Module Replacement) automatically
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "3000"]
+

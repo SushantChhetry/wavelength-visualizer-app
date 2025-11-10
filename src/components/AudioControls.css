@@ -1,0 +1,149 @@
+.audio-controls-container {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  min-width: 350px;
+  pointer-events: auto; /* Ensure controls are clickable */
+}
+
+.audio-controls-paper {
+  background: rgba(0, 0, 0, 0.85) !important;
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--color-gray-medium) !important;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.controls-title {
+  font-family: var(--font-heading) !important;
+  background: linear-gradient(135deg, var(--color-white) 0%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.05em;
+}
+
+.error-alert {
+  background: rgba(255, 0, 0, 0.1) !important;
+  border: 1px solid rgba(255, 0, 0, 0.3) !important;
+  border-radius: 8px;
+}
+
+.audio-dropzone {
+  border: 2px dashed var(--color-gray-medium) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-radius: 12px;
+  padding: 2rem !important;
+  transition: all var(--transition-normal);
+  cursor: pointer;
+}
+
+.audio-dropzone:hover {
+  border-color: var(--color-accent) !important;
+  background: rgba(0, 255, 255, 0.05) !important;
+}
+
+.audio-dropzone.drag-active {
+  border-color: var(--color-accent) !important;
+  background: rgba(0, 255, 255, 0.1) !important;
+  transform: scale(1.02);
+}
+
+.upload-icon {
+  color: var(--color-accent);
+  transition: color var(--transition-normal);
+}
+
+.dropzone-text {
+  color: var(--color-white-soft) !important;
+  font-family: var(--font-body) !important;
+}
+
+.file-badge {
+  font-family: var(--font-body) !important;
+  background: rgba(0, 255, 255, 0.1) !important;
+  border: 1px solid var(--color-accent) !important;
+  color: var(--color-accent) !important;
+}
+
+.play-button {
+  font-family: var(--font-body) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.05em;
+  transition: all var(--transition-normal);
+}
+
+.play-button:hover {
+  box-shadow: 0 4px 16px rgba(0, 255, 255, 0.3);
+}
+
+.stop-button {
+  font-family: var(--font-body) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.05em;
+  border-color: var(--color-gray-light) !important;
+  color: var(--color-white-soft) !important;
+  transition: all var(--transition-normal);
+}
+
+.stop-button:hover {
+  border-color: var(--color-accent) !important;
+  color: var(--color-accent) !important;
+  background: rgba(0, 255, 255, 0.1) !important;
+}
+
+.time-text {
+  font-family: var(--font-body) !important;
+  color: var(--color-white-soft) !important;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+}
+
+.seek-slider,
+.volume-slider {
+  margin-top: 0.5rem;
+}
+
+.seek-slider .mantine-Slider-track,
+.volume-slider .mantine-Slider-track {
+  background: var(--color-gray-dark) !important;
+}
+
+.seek-slider .mantine-Slider-bar,
+.volume-slider .mantine-Slider-bar {
+  background: var(--color-accent) !important;
+}
+
+.seek-slider .mantine-Slider-thumb,
+.volume-slider .mantine-Slider-thumb {
+  border-color: var(--color-accent) !important;
+  background: var(--color-black) !important;
+}
+
+.seek-slider .mantine-Slider-thumb:hover,
+.volume-slider .mantine-Slider-thumb:hover {
+  border-color: var(--color-accent-hover) !important;
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
+}
+
+.volume-icon {
+  color: var(--color-accent);
+}
+
+.volume-text {
+  font-family: var(--font-body) !important;
+  color: var(--color-white-soft) !important;
+  font-weight: 400;
+}
+
+@media (max-width: 768px) {
+  .audio-controls-container {
+    top: 80px;
+    left: 10px;
+    right: 10px;
+    min-width: auto;
+    width: calc(100% - 20px);
+  }
+}
+

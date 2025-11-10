@@ -1,0 +1,25 @@
+services:
+  wavelength-visualizer:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: wavelength-visualizer-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount source code for hot-reloading
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./index.html:/app/index.html
+      - ./vite.config.ts:/app/vite.config.ts
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./tsconfig.node.json:/app/tsconfig.node.json
+      # Exclude node_modules to use container's version
+      - /app/node_modules
+    environment:
+      - PORT=3000
+      - NODE_ENV=development
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+

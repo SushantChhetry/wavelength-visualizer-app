@@ -1,1 +1,11 @@
 export * from './mathUtils';
+export { ParameterMapper, type VisualParameters } from './ParameterMapper';
+export { HashSeededRNG } from './HashSeededRNG';
+export { SobolSequence } from './attractors/SobolSequence';
+export { LorenzAttractor } from './attractors/LorenzAttractor';
+export { AttractorBase, type AttractorState } from './attractors/AttractorBase';
+export { CurlNoiseField } from './flow/CurlNoiseField';
+export { FlowField } from './flow/FlowField';
+export { CollisionAvoidance } from './CollisionAvoidance';
+export { ColorMapper, type ColorMapping } from './color/ColorMapper';
+export { hclToRgb, rgbToHcl } from './color/ColorSpace';

@@ -28,7 +28,10 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^24.10.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
     "@types/three": "^0.181.0",
+    "@vitejs/plugin-react": "^4.3.3",
     "happy-dom": "^20.0.10",
     "jsdom": "^27.1.0",
     "typescript": "^5.9.3",
@@ -36,6 +39,15 @@
     "vitest": "^4.0.8"
   },
   "dependencies": {
+    "@mantine/core": "^7.15.0",
+    "@mantine/dropzone": "^7.15.0",
+    "@mantine/hooks": "^7.15.0",
+    "@tabler/icons-react": "^3.19.0",
+    "framer-motion": "^12.23.24",
+    "mermaid": "^11.12.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.9.5",
     "three": "^0.181.0"
   }
 }

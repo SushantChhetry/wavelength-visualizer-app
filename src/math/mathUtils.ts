@@ -2,6 +2,8 @@
  * Mathematical utilities for signal processing and transformations
  */
 
+import { HashSeededRNG } from './HashSeededRNG';
+
 /**
  * Generate 3D curl noise using gradient of potential function
  */
@@ -31,34 +33,58 @@ function potential(x: number, y: number, z: number, time: number): number {
 /**
  * Stochastic Differential Equation (SDE) integration
  * dx = μ(x,t)dt + σ(x,t)dW where dW is Brownian motion
+ * Enhanced with hash-seeded RNG for reproducible randomness
  */
 export class SDEIntegrator {
-  private brownianIncrement(): number {
-    // Box-Muller transform for Gaussian random variable
-    const u1 = Math.random();
-    const u2 = Math.random();
-    return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+  private rng: HashSeededRNG;
+
+  constructor(seed: number = 0) {
+    this.rng = new HashSeededRNG(seed);
+  }
+
+  /**
+   * Set seed for reproducible randomness
+   */
+  setSeed(seed: number): void {
+    this.rng.setSeed(seed);
   }
 
   /**
    * Euler-Maruyama method for SDE integration
+   * @param position - Current position [x, y, z]
+   * @param drift - Drift vector μ(x,t)
+   * @param volatility - Diffusion coefficient σ(x,t) - can be audio-modulated
+   * @param dt - Time step
+   * @param seed - Optional seed override for this step
    */
   step(
     position: [number, number, number],
     drift: [number, number, number],
     volatility: number,
-    dt: number
+    dt: number,
+    seed?: number
   ): [number, number, number] {
-    const dW = [
-      this.brownianIncrement() * Math.sqrt(dt),
-      this.brownianIncrement() * Math.sqrt(dt),
-      this.brownianIncrement() * Math.sqrt(dt)
+    // Use provided seed or current seed
+    if (seed !== undefined) {
+      this.rng.setSeed(seed);
+    }
+
+    // Generate Brownian increments using hash-seeded Gaussian
+    const dW = this.rng.nextGaussian3D([0, 0, 0], 1);
+    
+    // Scale by sqrt(dt) for proper Brownian motion scaling
+    const sqrtDt = Math.sqrt(dt);
+    const scaledNoise: [number, number, number] = [
+      dW[0] * sqrtDt,
+      dW[1] * sqrtDt,
+      dW[2] * sqrtDt
     ];
 
+    // Euler-Maruyama: X_{n+1} = X_n + μ(X_n, t_n)Δt + σ(X_n, t_n)ΔW_n
     return [
-      position[0] + drift[0] * dt + volatility * dW[0],
-      position[1] + drift[1] * dt + volatility * dW[1],
-      position[2] + drift[2] * dt + volatility * dW[2]
+      position[0] + drift[0] * dt + volatility * scaledNoise[0],
+      position[1] + drift[1] * dt + volatility * scaledNoise[1],
+      position[2] + drift[2] * dt + volatility * scaledNoise[2]
     ];
   }
 }

@@ -1,27 +1,53 @@
 /**
  * Main application entry point
- * Wavelength Visualizer - Real-time audio visualization with curl noise and SDE flow
+ * 3D Universe Audio Visualizer - Multiband line-based visualization
+ * with chaotic attractors, SDEs, and divergence-free flow fields
  */
 
 import './style.css';
-import { AudioProcessor } from './audio';
-import { Renderer } from './render';
+import { AudioProcessor, FeatureExtractor } from './audio';
+import { Renderer, BandManager } from './render';
 import { UIController } from './ui';
+import { ParameterMapper } from './math';
 
 class WavelengthVisualizerApp {
   private audioProcessor: AudioProcessor;
+  private featureExtractor: FeatureExtractor;
+  private parameterMapper: ParameterMapper;
+  private bandManager: BandManager;
   private renderer: Renderer;
   private uiController: UIController;
   private animationFrameId: number | null = null;
+  private startTime: number = 0;
 
   constructor() {
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+    if (!canvas) {
+      throw new Error('Canvas element not found');
+    }
     
+    // Initialize audio processing
     this.audioProcessor = new AudioProcessor();
-    this.renderer = new Renderer(canvas);
+    const numBands = this.audioProcessor.getNumBands();
+    const sampleRate = this.audioProcessor.getSampleRate();
+    
+    // Initialize feature extraction
+    this.featureExtractor = new FeatureExtractor(numBands, sampleRate);
+    
+    // Initialize parameter mapping
+    this.parameterMapper = new ParameterMapper();
+    
+    // Initialize band manager
+    this.bandManager = new BandManager(numBands, 20); // 20 instances per band
+    
+    // Initialize renderer
+    this.renderer = new Renderer(canvas, this.bandManager);
+    
+    // Initialize UI
     this.uiController = new UIController();
 
     this.initializeUI();
+    this.startTime = performance.now() / 1000;
     this.startRenderLoop();
   }
 
@@ -30,6 +56,12 @@ class WavelengthVisualizerApp {
       try {
         await this.audioProcessor.loadAudioFile(file);
         console.log('Audio file loaded successfully');
+        
+        // Reset feature extractor
+        this.featureExtractor.reset();
+        
+        // Reset band manager
+        this.bandManager.reset();
       } catch (error) {
         console.error('Failed to load audio file:', error);
       }
@@ -38,6 +70,7 @@ class WavelengthVisualizerApp {
     this.uiController.setOnPlayPause((playing) => {
       if (playing) {
         this.audioProcessor.play();
+        this.startTime = performance.now() / 1000;
       } else {
         this.audioProcessor.pause();
       }
@@ -45,15 +78,13 @@ class WavelengthVisualizerApp {
 
     this.uiController.setOnReset(() => {
       this.audioProcessor.pause();
-      // Renderer will reset on next frame
+      this.featureExtractor.reset();
+      this.bandManager.reset();
+      this.parameterMapper.reset();
+      this.startTime = performance.now() / 1000;
     });
 
-    this.uiController.setOnFlowIntensityChange((intensity) => {
-      this.renderer.setFlowIntensity(intensity);
-    });
-
-    // Initialize flow intensity
-    this.renderer.setFlowIntensity(this.uiController.getFlowIntensity());
+    // Flow intensity control removed (now handled per-band via parameters)
   }
 
   private startRenderLoop(): void {
@@ -61,20 +92,39 @@ class WavelengthVisualizerApp {
       // Get audio data
       const cqtData = this.audioProcessor.getCQTData();
       
-      // Calculate audio intensity (average of frequency bins)
-      let intensity = 0;
-      for (let i = 0; i < cqtData.length; i++) {
-        // Convert dB to linear scale
-        intensity += Math.pow(10, cqtData[i] / 20);
-      }
-      intensity = intensity / cqtData.length;
+      // Calculate current time
+      const currentTime = (performance.now() / 1000) - this.startTime;
       
-      // Normalize and set audio intensity
-      const normalizedIntensity = Math.min(1, intensity * 2);
-      this.renderer.setAudioIntensity(normalizedIntensity);
-
+      // Extract features
+      const { bands: bandFeatures, global: globalFeatures } = 
+        this.featureExtractor.extractFeatures(cqtData, undefined, currentTime);
+      
+      // Detect onsets
+      const onsets = this.featureExtractor.detectOnsets(bandFeatures);
+      
+      // Update band parameters
+      for (let b = 0; b < bandFeatures.length; b++) {
+        const bandFeature = bandFeatures[b];
+        const hasOnset = onsets[b];
+        
+        // Map features to visual parameters
+        const params = this.parameterMapper.mapBandFeatures(
+          b,
+          bandFeature,
+          globalFeatures,
+          hasOnset
+        );
+        
+        // Update band parameters
+        this.bandManager.updateBandParameters(b, params);
+      }
+      
       // Render frame
-      this.renderer.render();
+      this.renderer.render(
+        cqtData,
+        globalFeatures.tempo,
+        globalFeatures.beatStrength
+      );
 
       this.animationFrameId = requestAnimationFrame(animate);
     };
