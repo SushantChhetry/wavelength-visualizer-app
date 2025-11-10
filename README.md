@@ -131,6 +131,81 @@ npm test
 - **WebAudio API**: Real-time audio processing
 - **GLSL**: Custom shaders for GPU computation
 
+## Deployment
+
+### Frontend Deployment (Vercel)
+
+The frontend is deployed on Vercel with automatic CI/CD:
+
+1. **Setup Vercel Project**:
+   - Connect your GitHub repository to Vercel
+   - Configure build settings (already in `vercel.json`)
+   - Add environment variables if needed
+
+2. **Required Secrets** (in GitHub repository settings):
+   - `VERCEL_TOKEN`: Your Vercel API token
+   - `VERCEL_ORG_ID`: Your Vercel organization ID
+   - `VERCEL_PROJECT_ID`: Your Vercel project ID
+
+3. **Automatic Deployment**:
+   - Push to `main` branch triggers production deployment
+   - Pull requests create preview deployments
+
+### Backend Deployment (Railway)
+
+Backend deployment uses Railway's recommended builder:
+
+1. **Setup Railway Project**:
+   - Connect your GitHub repository to Railway
+   - Railway automatically detects `railway.json` and `Dockerfile`
+   - Configure environment variables
+
+2. **Required Secrets** (in GitHub repository settings):
+   - `RAILWAY_TOKEN`: Your Railway API token
+
+3. **Deployment Process**:
+   - Railway uses Nixpacks builder by default
+   - Builds with `npm run build`
+   - Runs with `npm run preview` on Railway platform
+   - Auto-assigns PORT environment variable
+
+### Manual Deployment
+
+**Build locally**:
+```bash
+npm run build
+```
+
+**Preview production build**:
+```bash
+npm run preview
+```
+
+**Docker deployment**:
+```bash
+docker build -t wavelength-visualizer .
+docker run -p 3000:3000 wavelength-visualizer
+```
+
+### CI/CD Workflows
+
+Three GitHub Actions workflows are configured:
+
+1. **CI Workflow** (`.github/workflows/ci.yml`):
+   - Runs on push and PR to main/develop
+   - Tests on Node.js 18.x and 20.x
+   - Uploads coverage to Codecov
+
+2. **Vercel Deployment** (`.github/workflows/deploy-vercel.yml`):
+   - Deploys frontend to Vercel
+   - Production on main branch push
+   - Preview on pull requests
+
+3. **Railway Deployment** (`.github/workflows/deploy-railway.yml`):
+   - Deploys backend to Railway
+   - Only on main branch push
+   - Uses Railway CLI
+
 ## Project Structure
 
 See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed architecture documentation.
